@@ -2,7 +2,7 @@
 
 var fs      = require ('fs');
 var path    = require ('path');
-var {spawn} = require ('child_process');
+var spawn   = require ('child_process').spawn;
 var express = require ('express');
 var program = require ('commander');
 
