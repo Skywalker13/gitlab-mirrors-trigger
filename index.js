@@ -36,7 +36,7 @@ function gitmirror (config, res, cmd, projectName) {
 function start (configFile) {
   const config = readConfig (configFile)
 
-  app.put ('/update/:project', (req, res, next, project) => {
+  app.get ('/update/:project', (req, res, next, project) => {
     gitmirror (config, res, 'update', project);
     next ();
   });
