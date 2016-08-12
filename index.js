@@ -17,8 +17,13 @@ function readPackage () {
   return JSON.parse (fs.readFileSync (path.join (__dirname, 'package.json')));
 }
 
-function gitmirror (config, res, cmd, projectName) {
-  var gitmirror = spawn (config.gitmirror.bin[cmd], [projectName], {
+function gitmirror (config, res, cmd, project, token) {
+  if (!config.token || config.token !== token) {
+    res.sendStatus (401);
+    return;
+  }
+
+  var gitmirror = spawn (config.gitmirror.bin[cmd], [project], {
     cwd: config.gitmirror.path
   });
 
@@ -36,9 +41,8 @@ function gitmirror (config, res, cmd, projectName) {
 function start (configFile) {
   var config = readConfig (configFile)
 
-  app.get ('/update/:project/:token', function (req, res, next, project) {
-    gitmirror (config, res, 'update', project);
-    next ();
+  app.get ('/update/:project/:token', function (req, res) {
+    gitmirror (config, res, 'update', req.params.project, req.params.token);
   });
 
   app.listen (config.server.port);
