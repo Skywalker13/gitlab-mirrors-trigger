@@ -1,0 +1,28 @@
+{
+  "name": "gitlab-mirrors-trigger",
+  "version": "0.1.0",
+  "description": "GitLab mirrors trigger",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skywalker13/gitlab-mirrors-trigger.git"
+  },
+  "keywords": [
+    "gitlab",
+    "mirrors",
+    "trigger"
+  ],
+  "author": "Mathieu Schroeter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Skywalker13/gitlab-mirrors-trigger/issues"
+  },
+  "homepage": "https://github.com/Skywalker13/gitlab-mirrors-trigger#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "express": "^4.14.0"
+  }
+}

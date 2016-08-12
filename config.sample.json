@@ -1,0 +1,12 @@
+{
+  "token": "",
+  "server": {
+    "port": 6789
+  },
+  "gitmirror": {
+    "bin": {
+      "update": "update_mirror.sh"
+    },
+    "path": ""
+  }
+}
