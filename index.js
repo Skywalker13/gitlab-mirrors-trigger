@@ -1,12 +1,12 @@
 'use strict';
 
-const fs      = require ('fs');
-const path    = require ('path');
-const {spawn} = require ('child_process');
-const express = require ('express');
-const program = require ('commander');
+var fs      = require ('fs');
+var path    = require ('path');
+var {spawn} = require ('child_process');
+var express = require ('express');
+var program = require ('commander');
 
-const app = express();
+var app = express();
 
 
 function readConfig (configPath) {
@@ -18,14 +18,14 @@ function readPackage () {
 }
 
 function gitmirror (config, res, cmd, projectName) {
-  const gitmirror = spawn (config.gitmirror.bin[cmd], [projectName], {
+  var gitmirror = spawn (config.gitmirror.bin[cmd], [projectName], {
     cwd: config.gitmirror.path
   });
 
-  gitmirror.stdout.on ('data', (data) => res.write (data.toString ()));
-  gitmirror.stderr.on ('data', (data) => res.write (data.toString ()));
+  gitmirror.stdout.on ('data', function (data) {res.write (data.toString ());});
+  gitmirror.stderr.on ('data', function (data) {res.write (data.toString ());});
 
-  gitmirror.on ('close', (code) => {
+  gitmirror.on ('close', function (code) {
     if (code !== 0) {
       res.write (`exited with error code: ${code}`);
     }
@@ -34,9 +34,9 @@ function gitmirror (config, res, cmd, projectName) {
 }
 
 function start (configFile) {
-  const config = readConfig (configFile)
+  var config = readConfig (configFile)
 
-  app.get ('/update/:project', (req, res, next, project) => {
+  app.get ('/update/:project/:token', function (req, res, next, project) {
     gitmirror (config, res, 'update', project);
     next ();
   });
@@ -45,7 +45,7 @@ function start (configFile) {
   console.log (`server listing on port ${config.server.port}`)
 }
 
-const pkgDef = readPackage ();
+var pkgDef = readPackage ();
 
 program
   .version (pkgDef.version)
