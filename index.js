@@ -41,6 +41,7 @@ function gitmirror (config, res, cmd, project, token) {
     if (code !== 0) {
       res.write ('exited with error code: %d', code);
     }
+    res.status (200);
     res.end ();
   });
 }
