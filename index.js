@@ -33,8 +33,16 @@ function gitmirror (config, res, cmd, project, token) {
     cwd: config.gitmirror.path
   });
 
-  gitmirror.stdout.on ('data', function (data) {res.write (data.toString ());});
-  gitmirror.stderr.on ('data', function (data) {res.write (data.toString ());});
+  gitmirror.stdout.on ('data', function (data) {
+    var output = data.toString ();
+    console.log (output);
+    res.write (output);
+  });
+  gitmirror.stderr.on ('data', function (data) {
+    var output = data.toString ();
+    console.error (output);
+    res.write (output);
+  });
 
   gitmirror.on ('exit', function (code) {
     console.log ('exited with code: %d', code);
