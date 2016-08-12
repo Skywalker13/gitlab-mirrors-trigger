@@ -27,7 +27,7 @@ function gitmirror (config, res, cmd, projectName) {
 
   gitmirror.on ('close', function (code) {
     if (code !== 0) {
-      res.write (`exited with error code: ${code}`);
+      res.write ('exited with error code: %d', code);
     }
     res.end ();
   });
@@ -42,7 +42,7 @@ function start (configFile) {
   });
 
   app.listen (config.server.port);
-  console.log (`server listing on port ${config.server.port}`)
+  console.log ('server listing on port %s', config.server.port);
 }
 
 var pkgDef = readPackage ();
