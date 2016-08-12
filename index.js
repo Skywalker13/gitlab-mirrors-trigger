@@ -23,7 +23,8 @@ function gitmirror (config, res, cmd, project, token) {
     return;
   }
 
-  var gitmirror = spawn (config.gitmirror.bin[cmd], [project], {
+  var bin = path.join (config.gitmirror.path, config.gitmirror.bin[cmd]);
+  var gitmirror = spawn (bin, [project], {
     cwd: config.gitmirror.path
   });
 
