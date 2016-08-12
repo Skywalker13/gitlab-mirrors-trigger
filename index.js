@@ -38,7 +38,7 @@ function gitmirror (config, res, cmd, project, token) {
 
   gitmirror.on ('exit', function (code) {
     console.log ('exited with code: %d', code);
-    res.write ('exited with code: %d', code);
+    res.write ('exited with code: ' + code);
     res.status (200);
     res.end ();
   });
