@@ -17,18 +17,19 @@ function readPackage () {
   return JSON.parse (fs.readFileSync (path.join (__dirname, 'package.json')));
 }
 
-function gitmirror (config, cmd, projectName) {
+function gitmirror (config, res, cmd, projectName) {
   const gitmirror = spawn (config.gitmirror.bin[cmd], [projectName], {
     cwd: config.gitmirror.path
   });
 
-  gitmirror.stdout.on ('data', (data) => console.log (data.toString ()));
-  gitmirror.stderr.on ('data', (data) => console.error (data.toString ()));
+  gitmirror.stdout.on ('data', (data) => res.write (data.toString ()));
+  gitmirror.stderr.on ('data', (data) => res.write (data.toString ()));
 
   gitmirror.on ('close', (code) => {
     if (code !== 0) {
-      console.error (`exited with error code: ${code}`);
+      res.write (`exited with error code: ${code}`);
     }
+    res.end ();
   });
 }
 
@@ -36,7 +37,7 @@ function start (configFile) {
   const config = readConfig (configFile)
 
   app.put ('/update/:project', (req, res, next, project) => {
-    gitmirror (config, 'update', project);
+    gitmirror (config, res, 'update', project);
     next ();
   });
 
