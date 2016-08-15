@@ -10,7 +10,7 @@ StandardError=syslog
 SyslogIdentifier=gitlab-mirrors-trigger
 User=gitmirror
 Group=gitmirror
-Environment=NODE_ENV=production
+Environment=LANG=C NODE_ENV=production
 
 [Install]
 WantedBy=multi-user.target
