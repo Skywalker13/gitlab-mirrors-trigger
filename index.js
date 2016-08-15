@@ -54,8 +54,13 @@ function gitmirror (config, res, cmd, project, token) {
 
 function start (configFile) {
   var config = readConfig (configFile)
+  var prefix = config.prefix || '';
 
-  app.get ('/update/:project/:token', function (req, res) {
+  app.get (prefix + '/', function (req, res) {
+    res.send ('GitLab Mirrors Trigger is ready');
+  });
+
+  app.get (prefix + '/update/:project/:token', function (req, res) {
     gitmirror (config, res, 'update', req.params.project, req.params.token);
   });
 

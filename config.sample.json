@@ -3,6 +3,7 @@
   "server": {
     "port": 6789
   },
+  "prefix": "",
   "gitmirror": {
     "bin": {
       "update": "update_mirror.sh"
