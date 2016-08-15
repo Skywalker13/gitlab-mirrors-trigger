@@ -23,13 +23,13 @@ function gitmirror (config, res, cmd, project, token) {
     return;
   }
 
-  if (!project || !project.length) {
+  if (cmd !== 'ls' && (!project || !project.length)) {
     res.sendSTatus (204);
     return;
   }
 
   var bin = path.join (config.gitmirror.path, config.gitmirror.bin[cmd]);
-  var gitmirror = spawn (bin, [project], {
+  var gitmirror = spawn (bin, project ? [project] : null, {
     cwd: config.gitmirror.path
   });
 
@@ -62,6 +62,10 @@ function start (configFile) {
 
   app.get (prefix + '/update/:project/:token', function (req, res) {
     gitmirror (config, res, 'update', req.params.project, req.params.token);
+  });
+
+  app.get (prefix + '/ls/:token', function (req, res) {
+    gitmirror (config, res, 'ls', null, req.params.token);
   });
 
   app.listen (config.server.port);

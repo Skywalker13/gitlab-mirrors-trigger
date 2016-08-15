@@ -6,7 +6,8 @@
   "prefix": "",
   "gitmirror": {
     "bin": {
-      "update": "update_mirror.sh"
+      "update": "update_mirror.sh",
+      "ls": "ls-mirrors.sh"
     },
     "path": ""
   }
