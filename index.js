@@ -17,7 +17,7 @@ function readPackage () {
   return JSON.parse (fs.readFileSync (path.join (__dirname, 'package.json')));
 }
 
-function gitmirror (config, res, cmd, project, token) {
+function gitmirror (config, res, cmd, project, token, callback) {
   if (!config.token || config.token !== token) {
     res.sendStatus (401);
     return;
@@ -28,25 +28,25 @@ function gitmirror (config, res, cmd, project, token) {
     return;
   }
 
+  var stdout = '';
+  var stderr = '';
   var bin = path.join (config.gitmirror.path, config.gitmirror.bin[cmd]);
   var gitmirror = spawn (bin, project ? [project] : null, {
     cwd: config.gitmirror.path
   });
 
   gitmirror.stdout.on ('data', function (data) {
-    var output = data.toString ();
-    console.log (output);
-    res.write (output);
+    stdout += data.toString ();
   });
   gitmirror.stderr.on ('data', function (data) {
-    var output = data.toString ();
-    console.error (output);
-    res.write (output);
+    stderr += data.toString ();
   });
 
   gitmirror.on ('exit', function (code) {
     console.log ('exited with code: %d', code);
-    res.write ('exited with code: ' + code);
+    var output = callback (stdout, stderr);
+    output.code = code;
+    res.write (JSON.stringify (output));
     res.status (200);
     res.end ();
   });
@@ -61,11 +61,55 @@ function start (configFile) {
   });
 
   app.get (prefix + '/update/:project/:token', function (req, res) {
-    gitmirror (config, res, 'update', req.params.project, req.params.token);
+    gitmirror (config, res, 'update',
+               req.params.project, req.params.token, function (stdout, stderr) {
+      console.error (stderr);
+      var results = stdout
+        .split ('\n')
+        .filter (function (line) {
+          return line.length > 0;
+        });
+
+      var messages = stderr
+        .split ('\n')
+        .filter (function (line) {
+          return line.length > 0;
+        });
+
+      return {
+        messages: messages,
+        results: results
+      };
+    });
   });
 
   app.get (prefix + '/ls/:token', function (req, res) {
-    gitmirror (config, res, 'ls', null, req.params.token);
+    gitmirror (config, res, 'ls', null, req.params.token, function (stdout, stderr) {
+      console.error (stderr);
+      var results = stdout
+        .split ('\n')
+        .filter (function (line) {
+          return line.length > 0;
+        })
+        .map (function (line) {
+          var entry = line.split (' -> ');
+          return {
+            name: entry[0],
+            repository: entry[1]
+          };
+        });
+
+      var messages = stderr
+        .split ('\n')
+        .filter (function (line) {
+           return line.length > 0;
+        });
+
+      return {
+        messages: messages,
+        results: results
+      };
+    });
   });
 
   app.listen (config.server.port);
