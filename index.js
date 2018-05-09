@@ -31,7 +31,7 @@ function gitmirror (config, res, cmd, project, token, callback) {
   var stdout = '';
   var stderr = '';
   var bin = path.join (config.gitmirror.path, config.gitmirror.bin[cmd]);
-  var gitmirror = spawn (bin, project ? [project] : null, {
+  var gitmirror = spawn (bin, project ? [project] : [], {
     cwd: config.gitmirror.path
   });
 
